@@ -1,0 +1,10 @@
+# Diagnóstico de execução do bot
+erro_selenium.png
+erro_pagina.html
+
+# Python
+__pycache__/
+*.pyc
+
+# Configurações locais com credenciais (se você optar por um .env)
+.env

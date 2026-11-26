@@ -1,0 +1,116 @@
+
+chrome_options = Options()
+chrome_options.add_argument("--incognito")  # Abre em modo anônimo
+chrome_options.add_argument("--start-maximized")  # Abre a janela maximizada
+
+# 🛠️ Gerenciar automaticamente o ChromeDriver
+service = Service(ChromeDriverManager().install())
+
+# 🖥️ Inicializa o navegador com as opções configuradas
+driver = webdriver.Chrome(service=service, options=chrome_options)
+
+# 📨 Função para gerar e-mails aleatórios
+def gerar_email_aleatorio():
+    prefixo = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))  # Gera 8 caracteres aleatórios
+    dominio = random.choice(["gmail.com", "yahoo.com", "outlook.com"])  # Escolhe um domínio aleatório
+    return f"{prefixo}@{dominio}"
+
+# 🌐 Acessa o site
+driver.get("https://7788bet.com")
+time.sleep(5)  # Espera inicial para carregar a página
+
+# 📲 Função para recarregar a página até que o elemento apareça
+def esperar_elemento_e_clicar(xpath, timeout=30, max_tentativas=5):
+    for tentativa in range(max_tentativas):  # Tentará no máximo 5 vezes recarregar a página
+        try:
+            # Aguarda até o elemento estar visível
+            elemento = WebDriverWait(driver, timeout).until(
+                EC.presence_of_element_located((By.XPATH, xpath))
+            )
+            print("✅ Elemento encontrado, realizando clique!")
+            elemento.click()
+            return True
+        except Exception as e:
+            print(f"🔄 Tentativa {tentativa + 1}: Elemento não encontrado, recarregando a página...")
+            driver.refresh()
+            time.sleep(5)  # Aguarda um pouco após recarregar
+    print("❌ Não foi possível encontrar o elemento após várias tentativas.")
+    return False
+
+# 🚀 Preenchimento do formulário de cadastro
+try:
+    # 🔍 Localizar o campo de e-mail
+    input_email = driver.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div/div[2]/div[2]/div/div/div[1]/div/form/div[2]/div/div/span/div/div/div[1]/input')
+    print("✅ Campo de e-mail encontrado com sucesso!")
+
+    # 📨 Gerar e-mail aleatório
+    email = gerar_email_aleatorio()
+    print(f"📧 E-mail gerado: {email}")
+
+    # 🖱️ Preencher o campo de e-mail
+    input_email.click()
+    time.sleep(1)
+    input_email.send_keys(email)
+    time.sleep(2)
+
+    # 🔒 Localizar o campo de senha
+    input_password = driver.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div/div[2]/div[2]/div/div/div[1]/div/form/div[4]/div/div[1]/div/div[1]/input')
+    print("✅ Campo de senha encontrado com sucesso!")
+
+    # 🖱️ Preencher o campo de senha
+    senha = "123efoda"
+    input_password.click()
+    time.sleep(1)
+    input_password.send_keys(senha)
+    time.sleep(2)
+
+    # 🔒 Localizar o campo de confirmação de senha
+    input_confirm_password = driver.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div/div[2]/div[2]/div/div/div[1]/div/form/div[6]/div/div[1]/div/div[1]/input')
+    print("✅ Campo de confirmação de senha encontrado com sucesso!")
+
+    # 🖱️ Preencher o campo de confirmação de senha
+    input_confirm_password.click()
+    time.sleep(1)
+    input_confirm_password.send_keys(senha)
+    time.sleep(2)
+
+    # 🔘 Localizar o botão de confirmação
+    botao_confirmacao = driver.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div/div[3]/div[2]/div/button')
+    print("✅ Botão de confirmação encontrado com sucesso!")
+    botao_confirmacao.click()
+    time.sleep(2)
+
+    print("🎯 Conta criada com sucesso!")
+
+    # 🔄 Recarregar até que o botão desejado apareça
+    xpath_botao_final = '/html/body/div[3]/div/div/div[2]/button[1]'
+    if esperar_elemento_e_clicar(xpath_botao_final):
+        print("✅ Botão final clicado com sucesso!")
+    else:
+        print("⚠️ Falha ao clicar no botão final após várias tentativas.")
+
+except Exception as e:
+    print("❌ Erro ao localizar ou preencher um dos elementos:", e)
+    print("📝 HTML da página atual:")
+    print(driver.page_source)
+
+finally:
+
+    # 🧹 Limpar cookies e fechar o navegador
+    driver.delete_all_cookies()
+    time.sleep(1)
+
+    # Localiza o elemento pelo XPath
+    elemento = driver.find_element(By.XPATH, '/html/body/div[1]/div/footer/div/div[1]/div/div[2]')
+
+    # Realiza o clique no elemento
+    elemento.click()
+
+    elemento_mission = driver.find_element(By.XPATH, '/html/body/div[1]/div/section/div/header/header/div[2]/div/div[1]/div/div[2]')
+
+    elemento_click_mission = elemento_mission.click()
+
+    elemento_receber_criar_conta = driver.find_element(By.XPATH, '/html/body/div[1]/div/section/div/section/div/section/div/div/div[2]/div[2]/div/div/div/div[1]/div[1]/div[2]/div[2]/div/div/div')
+
+    elemento_click_receber_criar_conta = elemento_receber_criar_conta.click()
+
